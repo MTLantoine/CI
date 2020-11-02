@@ -14,10 +14,14 @@ jobs:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
   lint:
-    - run: yarn lint && yarn format:check
+    docker: *shared_docker
+    steps:
+      - run: yarn lint && yarn format:check
 
   test:
-    - run: yarn test:ci
+    docker: *shared_docker
+    steps:
+      - run: yarn test:ci
 
 workflows:
   version: 2
