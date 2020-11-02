@@ -1,20 +1,5 @@
 version: 2.1
 jobs:
-  format:
-    docker: &shared_docker
-      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
-    steps:
-      - checkout # check out the code in the project directory
-      - run: yarn global add node-gyp && yarn install
-      - restore_cache:
-          keys:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-
-      - run: yarn install && yarn format:write
-
   build:
     docker: &shared_docker
       - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
@@ -54,7 +39,6 @@ workflows:
   version: 2
   build_test:
     jobs:
-      - format
       - build
       - lint
       - test
