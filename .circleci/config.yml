@@ -11,7 +11,8 @@ jobs:
       - image: circleci/node:12
     steps:
       - checkout
-      - run: echo "Hello Man"
+      - run: yarn global add node-gyp && yarn install
+      - run: npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
 workflows:
   version: 2
