@@ -1,27 +1,11 @@
 version: 2.1
-workflows:
-  workflow:
-    jobs:
-      - hello1
-      - yarn1
 jobs:
-  hello1:
+  build:
     docker:
-      - image: 'circleci/node:12'
+      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
     steps:
       - checkout # check out the code in the project directory
-      - run:
-        command: 'echo ok'
-        name: 'Hello World'
-  yarn1:
-    docker:
-      - image: 'circleci/node:12'
-    steps:
-      - checkout
-      - restore_cache:
-        key: yarn-v1-packages-{{ checksum "yarn.lock" }}
-      - run: yarn global add node-gyp && yarn install
-      - save_cache:
-          keys: yarn-v1-packages-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
+      - run: echo "hello world" # run the `echo` command
