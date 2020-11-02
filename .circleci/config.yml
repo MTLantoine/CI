@@ -2,22 +2,26 @@ version: 2.1
 workflows:
   workflow:
     jobs:
-      - yarnlint
-      - yarntest
+      - hello1
+      - yarn1
 jobs:
-  yarnlint:
+  hello1:
     docker:
-      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
+      - image: 'circleci/node:12'
     steps:
       - checkout # check out the code in the project directory
       - run:
         command: 'echo ok'
         name: 'Hello World'
-  yarntest:
+  yarn1:
     docker:
-      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
+      - image: 'circleci/node:12'
     steps:
-      - run: yarn global add node-gyp && yarn install
+      - checkout
       - restore_cache:
-          keys:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
+        key: yarn-v1-packages-{{ checksum "yarn.lock" }}
+      - run: yarn global add node-gyp && yarn install
+      - save_cache:
+          keys: yarn-v1-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
