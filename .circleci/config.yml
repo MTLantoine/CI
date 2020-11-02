@@ -29,8 +29,7 @@ jobs:
       - restore_cache:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - run:
-        yarn global add node-gyp && yarn install && yarn test:ci
+      - run: yarn global add node-gyp && yarn install && yarn test:ci
 
   # e2e_test:
   #   docker:
@@ -39,7 +38,7 @@ jobs:
   #   steps:
   #     - checkout
   #     - run:
-  #       command: yarn 
+  #       command: yarn
 
 workflows:
   version: 2
