@@ -1,13 +1,22 @@
 version: 2.1
+workflows:
+  workflow:
+    jobs:
+      - yarnlint
+      - yarntest
 jobs:
-  build:
+  yarnlint:
     docker:
       - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
     steps:
       - checkout # check out the code in the project directory
+      - run:
+        command: 'echo ok'
+        name: 'Hello World'
+  yarntest:
+    docker:
+      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
+    steps:
       - run: yarn global add node-gyp && yarn install
       - restore_cache:
           keys:
