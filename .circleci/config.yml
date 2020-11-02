@@ -1,22 +1,11 @@
 version: 2.1
 jobs:
-  hello_world:
+  build:
     docker:
-      - image: circleci/node:12
+      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
     steps:
-      - checkout
-      - run: echo "Hello World"
-  yarn:
-    docker:
-      - image: circleci/node:12
-    steps:
-      - checkout
+      - checkout # check out the code in the project directory
       - run: yarn global add node-gyp && yarn install
-      - run: npm-v1-dependencies-{{ checksum "yarn.lock" }}
-
-workflows:
-  version: 2
-  build_test:
-    jobs:
-      - hello_world
-      - yarn
