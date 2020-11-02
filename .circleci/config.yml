@@ -3,14 +3,14 @@ jobs:
   build:
     docker: &shared_docker
       - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
     steps:
       - checkout # check out the code in the project directory
-      - restore_cache:
+      - save_cache:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
+          paths: ./node_modules/
+      - restore_cache:
+          keys: npm-v1-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn global add node-gyp && yarn install
 
   lint:
@@ -18,9 +18,9 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - restore_cache:
-          keys:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn global add node-gyp && yarn install && yarn lint && yarn format:check
+          keys: npm-v1-dependencies-{{ checksum "yarn.lock" }}
+
+      - run: yarn lint && yarn format:check
 
   test:
     docker: *shared_docker
@@ -29,7 +29,7 @@ jobs:
       - restore_cache:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn global add node-gyp && yarn install && yarn test:ci
+      - run: yarn test:ci
 
   # e2e_test:
   #   docker:
