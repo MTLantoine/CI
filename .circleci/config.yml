@@ -6,8 +6,7 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - save_cache:
-          key:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
+          key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
           paths: ./node_modules/
       - restore_cache:
           keys:
