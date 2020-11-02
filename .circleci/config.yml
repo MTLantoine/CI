@@ -56,7 +56,9 @@ workflows:
     jobs:
       - build
       - lint:
-        requires: build
+        requires:
+          - build
       - test:
-        requires: build
+        requires:
+          - build
       # - e2e_test
