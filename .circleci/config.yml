@@ -1,10 +1,9 @@
 version: 2.1
 jobs:
   cache: &shared-config
-    docker:
-      - image: circleci/node:12
+    - image: circleci/node:12
   job1:
-    <<: *shared-config
+    docker: *shared-config
     steps:
       - checkout
       - run: echo "Hello World"
