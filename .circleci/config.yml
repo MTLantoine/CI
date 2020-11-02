@@ -1,6 +1,10 @@
+version: 2.1
 workflows:
-  version: 2.1
-  jobs:
+  workflow1:
+    jobs:
+      - job1
+jobs:
+  job1:
     build:
       docker:
         - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
