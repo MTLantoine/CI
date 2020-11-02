@@ -17,11 +17,17 @@ jobs:
     docker: *shared_docker
     steps:
       - run: yarn lint && yarn format:check
+      - restore_cache:
+          keys:
+            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
   test:
     docker: *shared_docker
     steps:
       - run: yarn test:ci
+      - restore_cache:
+          keys:
+            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
 workflows:
   version: 2
