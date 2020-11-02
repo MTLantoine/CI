@@ -1,11 +1,14 @@
 version: 2.1
 jobs:
-  build:
+  cache: $shared-config
     docker:
       - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
+  build:
+    check-format:
+      <<: *shared-config
     steps:
       - checkout # check out the code in the project directory
       - run: yarn global add node-gyp && yarn install
