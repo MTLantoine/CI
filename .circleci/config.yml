@@ -14,31 +14,19 @@ jobs:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
   lint:
-    docker: *shared_docker
-    steps:
-      - checkout # check out the code in the project directory
-      - run: yarn global add node-gyp && yarn install
-      - restore_cache:
-          keys:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-
-      - run: yarn lint && yarn format:check
+    - run: yarn lint && yarn format:check
 
   test:
-    docker: *shared_docker
-    steps:
-      - checkout # check out the code in the project directory
-      - run: yarn global add node-gyp && yarn install
-      - restore_cache:
-          keys:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-
-      - run: yarn test:ci
+    - run: yarn test:ci
 
 workflows:
   version: 2
   build_test:
     jobs:
       - build
-      - lint
-      - test
+      - lint:
+        requires:
+          - build
+      - test:
+        requires:
+          - build
