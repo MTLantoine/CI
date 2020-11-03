@@ -50,7 +50,7 @@ jobs:
             - npm-v6-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn test:e2e
   documentation:
-    docker: *config
+    docker: *shared_docker
     steps:
       - checkout
       - run: yarn buld:dock
