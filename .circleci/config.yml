@@ -62,4 +62,4 @@ workflows:
       - build
       - lint
       - test
-      # - e2e_test
+      - bddPostgres
