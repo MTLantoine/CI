@@ -10,6 +10,10 @@ jobs:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn global add node-gyp && yarn install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
   lint:
     docker: *shared_docker
