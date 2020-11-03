@@ -48,8 +48,21 @@ jobs:
           paths:
             - ./node_modules
 
+  lint:
+    docker: *docker
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn lint && yarn format:check
+
 workflows:
   version: 2
   build-and-test:
     jobs:
       - build
+      - lint:
+          requires:
+            - build
