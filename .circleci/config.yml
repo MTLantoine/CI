@@ -34,7 +34,7 @@
 version: 2
 jobs:
   build:
-    docker:
+    docker: &docker
       - image: circleci/node:12
     
     working_directory: ~/repo
@@ -43,8 +43,7 @@ jobs:
       - run: echo build step
 
   test:
-    docker:
-      - image: circleci/node:12
+    docker: *docker
 
     working_directory: ~/repo
 
@@ -55,7 +54,6 @@ workflows:
   version: 2
   build-and-test:
     jobs:
-      - build
       - test:
           requires:
             - build
