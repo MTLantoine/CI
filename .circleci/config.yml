@@ -23,6 +23,10 @@ jobs:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn lint && yarn format:check
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
   test:
     docker: *shared_docker
@@ -32,6 +36,10 @@ jobs:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn test:ci
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
 
 workflows:
