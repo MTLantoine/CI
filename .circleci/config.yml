@@ -2,26 +2,24 @@ version: 2.1
 jobs:
   build:
     docker: &shared_docker
-      - image: circleci/node:12
+      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
     steps:
       - checkout # check out the code in the project directory
       - restore_cache:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - save_cache:
-          key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
-          paths: ./node_modules/
       - run: yarn global add node-gyp && yarn install
-
   lint:
     docker: *shared_docker
     steps:
       - checkout # check out the code in the project directory
       - restore_cache:
-          keys: npm-v1-dependencies-{{ checksum "yarn.lock" }}
-
+          keys:
+            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn global add node-gyp && yarn install && yarn lint && yarn format:check
-
   test:
     docker: *shared_docker
     steps:
@@ -55,10 +53,6 @@ workflows:
   build_test:
     jobs:
       - build
-      - lint:
-        requires:
-          - build
-      - test:
-        requires:
-          - build
+      - lint
+      - test
       # - e2e_test
