@@ -15,7 +15,7 @@ jobs:
             - ./node_modules
 
   job2:
-    docker: &shared_docker
+    docker: *shared_docker
     steps:
       - checkout
       - restore_cache:
