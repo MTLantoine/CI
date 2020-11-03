@@ -6,40 +6,40 @@ jobs:
       - image: circleci/node:12
     steps:
       - checkout # check out the code in the project directory
-      - restore_cache:
-          keys:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn global add node-gyp && yarn install
       - save_cache:
           paths:
             - ./node_modules
           key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn global add node-gyp && yarn install
+      - restore_cache:
+          keys:
+            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
   lint:
     docker: *shared_docker
     steps:
       - checkout # check out the code in the project directory
-      - restore_cache:
-          keys:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn lint && yarn format:check
       - save_cache:
           paths:
             - ./node_modules
           key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn lint && yarn format:check
+      - restore_cache:
+          keys:
+            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
   test:
     docker: *shared_docker
     steps:
       - checkout # check out the code in the project directory
-      - restore_cache:
-          keys:
-            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn test:ci
       - save_cache:
           paths:
             - ./node_modules
           key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn test:ci
+      - restore_cache:
+          keys:
+            - npm-v1-dependencies-{{ checksum "yarn.lock" }}
 
 
 workflows:
