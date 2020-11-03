@@ -1,81 +1,37 @@
-# version: 2.1
-# jobs:
-#   build:
-#     docker: &shared_docker
-#       - image: circleci/node:12
-#     steps:
-#       - checkout # check out the code in the project directory
-#       - restore_cache:
-#           keys:
-#             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-#       - run: yarn global add node-gyp && yarn install
-#       - save_cache:
-#           key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
-#           paths:
-#             - ./node_modules
-
-#   job2:
-#     docker: *shared_docker
-#     steps:
-#       - checkout
-#       - restore_cache:
-#           keys:
-#             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-#       - run: echo Hello World !
-
-# workflows:
-#   version: 2
-#   build_test:
-#     jobs:
-#       - build
-#       - job2
-
-
-version: 2
+version: 2.1
 jobs:
   build:
-    docker: &docker
-      - image: circleci/node:12
-
+    docker: &shared_docker
+      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
     steps:
-      - checkout
+      - checkout # check out the code in the project directory
       - restore_cache:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn global add node-gyp && yarn install
-      - save_cache:
-          key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-
   lint:
-    docker: *docker
-
+    docker: *shared_docker
     steps:
-      - checkout
+      - checkout # check out the code in the project directory
       - restore_cache:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn lint && yarn format:check
-
+      - run: yarn global add node-gyp && yarn install && yarn lint && yarn format:check
   test:
-    docker: *docker
-
+    docker: *shared_docker
     steps:
-      - checkout
+      - checkout # check out the code in the project directory
       - restore_cache:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
-      - run: yarn test:ci
-
+      - run: yarn global add node-gyp && yarn install && yarn test:ci
 workflows:
   version: 2
-  build-and-test:
+  build_test:
     jobs:
       - build
-      - lint:
-          requires:
-            - build
-      - test:
-          requires:
-            - build
+      - lint
+      - test
