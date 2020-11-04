@@ -42,7 +42,7 @@ jobs:
           API_PORT: 3000
           API_HOST: localhost
           API_PROTOCOL: http
-      - image: circleci/postgres:latest
+      - image: circleci/postgres:13-alpine
         environment:
           POSTGRES_USER: antoine_mortelier
           POSTGRES_DB: psdb
