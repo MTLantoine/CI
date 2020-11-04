@@ -16,7 +16,7 @@ jobs:
                     mkdir /tmp/artifacts;
                     echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
       - store_artifacts:
-          path: /artifact
+          path: /tmp/artifact
           destination: doc-server
       - run: yarn doc:build
 
