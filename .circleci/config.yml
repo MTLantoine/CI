@@ -27,11 +27,28 @@ jobs:
   test:
     docker: *shared_docker
     steps:
-      - checkout # check out the code in the project directory
+      - checkout
       - restore_cache:
           keys:
             - npm-v2-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn test:ci
+
+  e2etest:
+    docker:
+      - image: circleci/node:12
+      - image: circleci/postgres:9.6-alpine
+        environment:
+          DATABASE_URL: postgres://antoine_mortelier:psqlpassword@localhost:5432/psdb
+          JWT_SECRET: some string yo want
+          API_PORT: 3000
+          API_HOST: localhost
+          API_PROTOCOL: http
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - npm-v2-dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn test:e2e
 
 
 workflows:
@@ -43,5 +60,8 @@ workflows:
           requires:
             - build
       - test:
+          requires:
+            - build
+      - e2etest:
           requires:
             - build
