@@ -2,33 +2,35 @@ version: 2.1
 jobs:
 
   build:
-    r_cache: &share_r_cache
-      keys:
-        - npm-v2-dependencies-{{ checksum "yarn.lock" }}
-    s_cache: &share_s_cache
-        paths:
-          - ./node_modules
-        key: npm-v2-dependencies-{{ checksum "yarn.lock" }}
     docker: &shared_docker
       - image: circleci/node:12
     steps:
       - checkout
-      - restore_cache: *share_r_cache
+      - restore_cache:
+          keys:
+            - npm-v2-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn global add node-gyp && yarn install
-      - save_cache: *share_s_cache
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: npm-v2-dependencies-{{ checksum "yarn.lock" }}
 
   lint:
     docker: *shared_docker
     steps:
       - checkout
-      - restore_cache: *share_r_cache
+      - restore_cache:
+          keys:
+            - npm-v2-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn lint && yarn format:check
 
   test:
     docker: *shared_docker
     steps:
       - checkout # check out the code in the project directory
-      - restore_cache: *share_r_cache
+      - restore_cache:
+          keys:
+            - npm-v2-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn test:ci
 
 
