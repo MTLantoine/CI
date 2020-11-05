@@ -61,7 +61,6 @@ jobs:
           POSTGRES_USER: antoine_mortelier
           POSTGRES_DB: psdb
           POSTGRES_PASSWORD: pwd
-
     steps:
       - checkout
       - restore_cache:
@@ -72,7 +71,7 @@ jobs:
 
 workflows:
   version: 2
-  build_test:
+  mybuild:
     jobs:
       - build
       - lint:
